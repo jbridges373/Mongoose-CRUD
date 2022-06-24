@@ -1,15 +1,12 @@
+// Import libraries for mongoose and dotenv
 const mongoose = require("mongoose");
-
 require("dotenv").config();
 
 const connection = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO_URI)
-        console.log("successful database connection")
-    } catch (error) {
-        console.log(error);
-    }
+	try {
+		await mongoose.connect(process.env.MONGO_URI);
+		console.log("Successful database connection");
+	} catch (error) {}
 };
 
 connection();
-// module.exports = connection;
