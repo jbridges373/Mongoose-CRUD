@@ -1,50 +1,40 @@
-const Movie = require("./movieModels"); //Taking Movie from model constraints 
+const mongoose = require("mongoose");
+const Film = require("./movieModels");
 
+exports.addFilm = async (filmObj) => {
+	try {
+		await Film.create(filmObj);
+	} catch (error) {
+		console.log(error);
+	}
+};
 
+exports.listFilm = async () => {
+	try {
+		return await Film.find({});
+	} catch (error) {
+		console.log(error);
+	}
+};
 
-exports.listMovie = async (movieObj) => {
-  try {
-    const response = await Movie.find({}) 
-    console.log(response)
-  } catch (error) {
-      console.log(error);
-  }
-}
+exports.updateFilm = async (criteria, updates) => {
+	try {
+		// Example parameters:
+		// criteria: { title: "Testing Title" }
+		// updates: { title: "New Testing Title", actor: "John Doe", rating: 5 }
 
- 
+		await Film.updateOne(criteria, updates);
+	} catch (error) {
+		console.log(error);
+	}
+};
 
-exports.addMovie = async (movieObj) => {
- try {
-     const response = await Movie.create(movieObj) 
-     console.log(response);
- } catch (error) {
-     console.log(error);
- }
-}
-
-exports.deleteMovie = async(movieObj) => {
-   try {
-       const response = await Movie.deleteOne(movieObj)
-       console.log(response)
-   } catch (error) {
-       console.log(error)
-   }
-
-}
-
-
-exports.updateMovie = async (movieObj) => {
-  try {
-    const response = await Movie.findOneAndUpdate(movieObj) 
-    
-  } catch (error) {
-      console.log(error);
-  }
-}
-
- 
-
-
-
-
-
+exports.deleteFilm = async (criteria) => {
+	try {
+		// Example parameters:
+		// criteria: { title: "Testing Title" }
+		await Film.deleteOne(criteria);
+	} catch (error) {
+		console.log(error);
+	}
+};

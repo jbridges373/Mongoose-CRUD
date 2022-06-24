@@ -1,44 +1,61 @@
-require("./db/connection"); // This runs all lines in connection.js connecting us to Database.
-const yargs = require("yargs")// Lets us use Yargs
+require("./db/connection");
 const mongoose = require("mongoose");
-const { addMovie } = require("./movies/movieMethods");
-const { deleteMovie } = require("./movies/movieMethods");
-const { updateMovie } = require("./movies/movieMethods");
-const { listMovie } = require("./movies/movieMethods");
- 
+const yargs = require("yargs");
 
+const {
+	addFilm,
+	listFilm,
+	updateFilm,
+	deleteFilm,
+} = require("./movies/movieMethods");
 
 const app = async (yargsObj) => {
-    if(yargsObj.addMovie){ // Terminal Call: node src/app.js --addMovie --title "Batman" --actor "Christian Bale"  //adds movie to database from yargs input
-       
-       await addMovie({title: yargsObj.title, 
-        actor: yargsObj.actor, 
-        year: yargsObj.year,})
-    } else if (yargsObj.listMovie){
-      await listMovie({})
-      console.log('Your movies are listed above');
-      
-          
+	try {
+		if (yargsObj.add) {
+			// pass to create function
+			await addFilm({
+				title: yargsObj.title,
+				actor: yargsObj.actor,
+				rating: yargsObj.rating,
+			});
+			console.log(await listFilm());
+		} else if (yargsObj.list) {
+			// Pass to read function
+			console.log(await listFilm());
+		} else if (yargsObj.update) {
+			// Build Criteria
+			const criteria = { title: yargsObj.update };
 
-    } else if (yargsObj.updateMovie) { // Terminal Call: --updateMovie --title "Batman 2" --newTitle "new film title"
-         await updateMovie({
-         title: yargsObj.newTitle,
-         actor: yargsObj.newActor,
-         year: yargsObj.newYear,  
-       
-         })
-         console.log("Your movie has been updated")
-   
-    } else if (yargsObj.deleteMovie) { // Call --deleteMovie in terminal 
-      await deleteMovie()
-      console.log('Previous movie has been deleted');
-    } else {
-   
-    }
-    await mongoose.disconnect();
+			// Build update fields
+			let update = {};
+			if (yargsObj.title) {
+				update = { ...update, title: yargsObj.title };
+			}
+			if (yargsObj.actor) {
+				update = { ...update, actor: yargsObj.actor };
+			}
+			if (yargsObj.rating) {
+				update = { ...update, rating: yargsObj.rating };
+			}
 
+			console.log(update);
+			// Pass to update function
+			await updateFilm(criteria, update);
+		} else if (yargsObj.delete) {
+			//Build Criteria
+			const criteria = { title: yargsObj.delete };
 
-}
+			// Pass to delete function
+			await deleteFilm(criteria);
+		} else {
+			// list the available options
+			console.log("incorrect command");
+		}
 
+		await mongoose.disconnect();
+	} catch (error) {
+		console.log(error);
+	}
+};
 
-app(yargs.argv)
+app(yargs.argv);
