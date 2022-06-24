@@ -1,4 +1,4 @@
-const Movie = require("./model"); //Taking Movie from model constraints 
+const Movie = require("./movieModels"); //Taking Movie from model constraints 
 
 
 
